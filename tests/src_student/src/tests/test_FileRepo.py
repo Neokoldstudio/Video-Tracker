@@ -4,7 +4,7 @@ from random import sample
 import filecmp
 import unittest
 import sys
-sys.path.append("../../../../")
+sys.path.append("../../../../src")
 from models.FileRepo import FileRepo
 from models.Point import Point
 
