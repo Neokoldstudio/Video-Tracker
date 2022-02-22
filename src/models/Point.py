@@ -7,12 +7,12 @@ class Point:
 
     def getX(self):
         """getter for the x value"""
-        return self.x
+        return self.__x
 
     def getY(self):
         """getter for the y value"""
-        return self.y
+        return self.__y
 
     def getTime(self):
         """getter for the y value"""
-        return self.time
+        return self.__time
