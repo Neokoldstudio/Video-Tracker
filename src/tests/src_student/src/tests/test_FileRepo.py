@@ -11,7 +11,7 @@ from models.Point import Point
 class test_FileRepo(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.__fileSample = "../sample.csv"
+        self.__fileSample = "sample.csv"
         self.__pointList = [Point(1,2,30),Point(10,20,60), Point(100,200,600)]
         self.__FileRepo = FileRepo()
         self.__toStringSample = "1;2;30"
