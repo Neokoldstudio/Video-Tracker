@@ -60,7 +60,7 @@ class View(tk.Frame):
 
     def open_file(self):
         self.pause = False
-        self.filename = os.path.join(dirname, '../../ressources/bmo-video-1-1.mp4')
+        self.filename = os.path.join(dirname, '../../ressources/videos/bmo-video-1-1.mp4')
         print(self.filename)
         self.cap = cv2.VideoCapture(self.filename)
         self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
