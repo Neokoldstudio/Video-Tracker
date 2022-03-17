@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 import PIL.Image, PIL.ImageTk
 from tkinter import ttk
+from click import command
 import cv2
 
 dirname = os.path.dirname(__file__)
@@ -11,8 +12,7 @@ class View(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-
-
+        self.pause = False
         #------------------resizing the window to match screensize--------------#  
         width = self.parent.winfo_screenwidth()               
 
@@ -44,13 +44,13 @@ class View(tk.Frame):
         self.parent.config(menu=menubar)
 
         #-----------------video part----------#
-        
+
         videoLabelFrame = tk.LabelFrame(self.parent, text = "video To track :", bg = "white",relief = tk.SUNKEN, bd=4)
         videoLabelFrame.pack(padx=3)
-        message = tk.Label(videoLabelFrame, text="Hello, World!")
-        message.pack()
         self.canvas = tk.Canvas(videoLabelFrame)
         self.canvas.pack()
+        self.pauseButton = tk.Button(videoLabelFrame,text = "▶", command = lambda:self.pauseVideo())
+        self.pauseButton.pack()
         self.delay = 15   # ms
         self.open_file()
         self.play_video()
@@ -66,8 +66,6 @@ class View(tk.Frame):
         self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
         self.canvas.config(width = self.width, height = self.height)
-
-
     # get only one frame    
     def get_frame(self):   
         try:
@@ -92,3 +90,8 @@ class View(tk.Frame):
     def __del__(self):
         if self.cap.isOpened():
             self.cap.release()
+
+    def pauseVideo(self):
+        self.pause = not self.pause
+        if not self.pause:
+            self.parent.after(self.delay, self.play_video)
