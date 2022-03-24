@@ -1,12 +1,16 @@
+from genericpath import exists
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import LEFT, messagebox
+from turtle import width
 import PIL.Image, PIL.ImageTk
 from tkinter import ttk
 from click import command
+from models.Video import Video
+from controllers import Controller
 import cv2
 
-dirname = os.path.dirname(__file__)
+
 class View(tk.Frame):
 
     def __init__(self, parent):
@@ -21,7 +25,7 @@ class View(tk.Frame):
         self.parent.geometry("%dx%d" % (width, height))
 
         #------------------Menu bar--------------#
-        menubar = tk.Menu(self.parent, background='#ff8000', foreground='black', activebackground='white', activeforeground='black')  
+        menubar = tk.Menu(self.parent, background='white', foreground='black', activebackground='white', activeforeground='black')  
         file = tk.Menu(menubar, tearoff=1, background='white', foreground='black')    
         file.add_command(label="Open")  
         file.add_command(label="Save")  
@@ -44,54 +48,16 @@ class View(tk.Frame):
         self.parent.config(menu=menubar)
 
         #-----------------video part----------#
-
+        
         videoLabelFrame = tk.LabelFrame(self.parent, text = "video To track :", bg = "white",relief = tk.SUNKEN, bd=4)
-        videoLabelFrame.pack(padx=3)
+        videoLabelFrame.pack(side = LEFT)
         self.canvas = tk.Canvas(videoLabelFrame)
         self.canvas.pack()
-        self.pauseButton = tk.Button(videoLabelFrame,text = "▶", command = lambda:self.pauseVideo())
+        self.pauseButton = tk.Button(videoLabelFrame,text = "▶", command = lambda:self.controller.pauseVideo())
         self.pauseButton.pack()
         self.delay = 15   # ms
-        self.open_file()
-        self.play_video()
-    
+        
     def setController(self, controller):
         self.controller = controller
 
-    def open_file(self):
-        self.pause = False
-        self.filename = os.path.join(dirname, '../../ressources/videos/bmo-video-1-1.mp4')
-        print(self.filename)
-        self.cap = cv2.VideoCapture(self.filename)
-        self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-        self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        self.canvas.config(width = self.width, height = self.height)
-    # get only one frame    
-    def get_frame(self):   
-        try:
-            if self.cap.isOpened():
-                ret, frame = self.cap.read()
-                return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        except:
-            messagebox.showerror(title='Alert', message='End of the video.')
-
-
-    def play_video(self):
-        # Get a frame from the video source, and go to the next frame automatically
-        ret, frame = self.get_frame()
-        if ret:
-            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.canvas.create_image(0, 0, image = self.photo, anchor = ['nw'])
-        if not self.pause:
-            self.parent.after(self.delay, self.play_video)
-
-
     # Release the video source when the object is destroyed
-    def __del__(self):
-        if self.cap.isOpened():
-            self.cap.release()
-
-    def pauseVideo(self):
-        self.pause = not self.pause
-        if not self.pause:
-            self.parent.after(self.delay, self.play_video)
