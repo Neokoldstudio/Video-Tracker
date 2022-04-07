@@ -27,7 +27,7 @@ class View(tk.Frame):
         #------------------Menu bar--------------#
         menubar = tk.Menu(self.parent, background='white', foreground='black', activebackground='white', activeforeground='black')  
         file = tk.Menu(menubar, tearoff=1, background='white', foreground='black')    
-        file.add_command(label="Open")  
+        file.add_command(label="Open", command=lambda:self.controller.LoadVideo())  
         file.add_command(label="Save")  
         file.add_command(label="Save as")    
         file.add_separator()  
@@ -48,13 +48,21 @@ class View(tk.Frame):
         self.parent.config(menu=menubar)
 
         #-----------------video part----------#
-        
-        videoLabelFrame = tk.LabelFrame(self.parent, text = "video To track :", bg = "white",relief = tk.SUNKEN, bd=4)
-        videoLabelFrame.pack(side = LEFT)
-        self.canvas = tk.Canvas(videoLabelFrame)
+        self.canvas = tk.Canvas(self.parent)
         self.canvas.pack()
-        self.pauseButton = tk.Button(videoLabelFrame,text = "▶", command = lambda:self.controller.pauseVideo())
-        self.pauseButton.pack()
+        
+        self.frame = tk.LabelFrame(self.parent)
+        self.frame.pack()
+        self.FirstFrameButton = tk.Button(self.frame,text = "<<", command = lambda:self.controller.FirstFrame())
+        self.FirstFrameButton.pack(side = LEFT)
+        self.PreviousFrameButton = tk.Button(self.frame,text = "<|", command = lambda:self.controller.PreviousFrame())
+        self.PreviousFrameButton.pack(side = LEFT)
+        self.pauseButton = tk.Button(self.frame,text = "▶", command = lambda:self.controller.pauseVideo())
+        self.pauseButton.pack(side = LEFT)
+        self.NextFrameButton = tk.Button(self.frame,text = "|>", command = lambda:self.controller.NextFrame())
+        self.NextFrameButton.pack(side = LEFT)
+        self.LastFrameButton = tk.Button(self.frame,text = ">>", command = lambda:self.controller.LastFrame())
+        self.LastFrameButton.pack(side = LEFT)
         self.delay = 15   # ms
         
     def setController(self, controller):
