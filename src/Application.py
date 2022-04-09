@@ -12,6 +12,7 @@ class Application(tk.Tk):
 
         super().__init__()
         self.title('Video Tracker')
+        self.attributes('-fullscreen', True)
         # create a video model
         video = Video()
         # create a view and place it on the root window
