@@ -29,9 +29,6 @@ class Controller:
         if not self.pause:
             self.video.currentFrame += 1
             self.view.parent.after(self.view.delay, self.play_video)
-            
-        if self.video.currentFrame == len(self.video.videoFrames):
-            messagebox.showerror(title='Alert', message='End of the video.')
 
     def pauseVideo(self):
         self.pause = not self.pause
@@ -39,35 +36,38 @@ class Controller:
             self.view.parent.after(self.view.delay, self.play_video)
             
     def NextFrame(self):
-        if self.pause:
-            ret, frame = self.video.videoFrames[self.video.currentFrame+1]
-            if ret:
-                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-                self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
-                self.video.currentFrame += 1
-    
+        self.pause = True
+        ret, frame = self.video.videoFrames[self.video.currentFrame+1]
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
+            self.video.currentFrame += 1
+
     def PreviousFrame(self):
-        if self.pause:
-            ret, frame = self.video.videoFrames[self.video.currentFrame-1]
-            if ret:
-                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-                self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
-                self.video.currentFrame -= 1
-    
+        self.pause = True
+        ret, frame = self.video.videoFrames[self.video.currentFrame-1]
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
+            self.video.currentFrame -= 1
+
     def FirstFrame(self):
-        if self.pause:
-            ret, frame = self.video.videoFrames[0]
-            if ret:
-                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-                self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
-                
+        ret, frame = self.video.videoFrames[0]
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
+            self.video.currentFrame = 0
+        if not self.pause:
+            self.video.currentFrame += 1
+            self.view.parent.after(self.view.delay, self.play_video)
+            
     def LastFrame(self):
-        if self.pause:
-            ret, frame = self.video.videoFrames[len(self.video.videoFrames)-1]
-            if ret:
-                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-                self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
-                
+        ret, frame = self.video.videoFrames[len(self.video.videoFrames)-1]
+        if ret:
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+            self.view.canvas.create_image((self.view.canvas.winfo_width()-self.video.width)/2, 0, image = self.photo, anchor = ['nw'])
+            self.video.currentFrame = len(self.video.videoFrames)-1
+            
     def __del__(self):
        if self.video.cap.isOpened():
           self.video.cap.release()
