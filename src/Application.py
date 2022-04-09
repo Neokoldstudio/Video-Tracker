@@ -11,7 +11,7 @@ class Application(tk.Tk):
     def __init__(self):
 
         super().__init__()
-        self.title('Video Tracker')
+        self.title('Video Tracker')#this line is superficial as it just force fullscreen mode, can be removed.
         self.attributes('-fullscreen', True)
         # create a video model
         video = Video()
